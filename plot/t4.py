@@ -135,11 +135,11 @@ class ChartGenerator:
         
         for i in range(numOfData):
             x[i] = float(x[i]) / Xdiv
-            x[i] = x[i] / 30
+            x[i] = int(x[i])
 
         for i in range(numOfAlgo):
             for j in range(numOfData):
-                y[i][j] = float(y[i][j])
+                y[i][j] = float(y[i][j]) / 30 / 1000000 / 60
                 maxData = max(maxData, y[i][j])
                 minData = min(minData, y[i][j])
 
@@ -183,9 +183,9 @@ class ChartGenerator:
         plt.subplots_adjust(bottom = 0.19)
 
         # plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
-        ax1.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
-        ax1.yaxis.get_offset_text().set_fontsize(32)
-        ax1.set_yticks([0, 400, 800, 1200, 1600, 2000])
+        # ax1.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
+        # ax1.yaxis.get_offset_text().set_fontsize(28)
+        ax1.set_yticks([0.2, 0.4, 0.6, 0.8])
         
         plt.xticks(x_data, x)
         plt.ylabel(Ylabel, fontsize = Ylabel_fontsize, labelpad = 35)
@@ -211,7 +211,4 @@ class ChartGenerator:
             return r"($\mathregular{10^{" + str(multiple) + r"}}$)"
 
 if __name__ == "__main__":
-  
-
-    ChartGenerator("arrival_rate_finishedReq.ans", "Arrival Rate", "# Served Requests");
-
+    ChartGenerator("service_time_avg_finished_data_size.ans", "Deadline Avg. (s)",  "Throughputs (Mbps)");

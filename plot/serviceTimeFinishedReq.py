@@ -135,7 +135,7 @@ class ChartGenerator:
         
         for i in range(numOfData):
             x[i] = float(x[i]) / Xdiv
-            x[i] = x[i] / 30
+            x[i] = int(x[i]*30)
 
         for i in range(numOfAlgo):
             for j in range(numOfData):
@@ -185,7 +185,7 @@ class ChartGenerator:
         # plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
         ax1.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
         ax1.yaxis.get_offset_text().set_fontsize(32)
-        ax1.set_yticks([0, 400, 800, 1200, 1600, 2000])
+        ax1.set_yticks([300, 600, 900, 1200, 1500])
         
         plt.xticks(x_data, x)
         plt.ylabel(Ylabel, fontsize = Ylabel_fontsize, labelpad = 35)
@@ -211,7 +211,4 @@ class ChartGenerator:
             return r"($\mathregular{10^{" + str(multiple) + r"}}$)"
 
 if __name__ == "__main__":
-  
-
-    ChartGenerator("arrival_rate_finishedReq.ans", "Arrival Rate", "# Served Requests");
-
+    ChartGenerator("service_time_avg_finishedReq.ans", "Deadline Avg. (s)", "# Served Requests");
