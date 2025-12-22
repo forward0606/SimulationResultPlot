@@ -41,7 +41,7 @@ class ChartGenerator:
         ]
         # matplotlib.rcParams['text.usetex'] = True
 
-        fontsize = 32
+        fontsize = 36
         Xlabel_fontsize = fontsize
         Ylabel_fontsize = fontsize
         Xticks_fontsize = fontsize
@@ -64,6 +64,7 @@ class ChartGenerator:
         "axes.titlesize": 20,
         "font.family": "Times New Roman",
         "mathtext.it": "Times New Roman:italic",
+        "mathtext.rm": "Times New Roman",
         # "mathtext.default": "regular",
         "mathtext.fontset": "custom"
         # "mathtext.fontset": "custom"
@@ -73,7 +74,7 @@ class ChartGenerator:
         }
         
         matplotlib.rcParams.update(andy_theme)
-        fig, ax1 = plt.subplots(figsize = (7, 6), dpi = 600)
+        fig, ax1 = plt.subplots(figsize = (8, 6), dpi = 600)
         # ax1.spines['top'].set_linewidth(1.5)
         # ax1.spines['right'].set_linewidth(1.5)
         # ax1.spines['bottom'].set_linewidth(1.5)
@@ -122,16 +123,13 @@ class ChartGenerator:
             if float(x[numOfData - 1]) <= 10 ** i:
                 Xpow = (i - 2)
 
-        for i in range(numOfAlgo):
-            for j in range(numOfData):
-                y[i][j] = float(y[i][j]) / (30 * 1000 * 1000)
-        
         for k in range(-10, -1, 1):
             for i in range(numOfAlgo):
                 for j in range(numOfData):
                     if(float(y[i][j]) <= 10 ** k):
                         Ypow = k-2
 
+        Ypow = 3
         Ydiv = float(10 ** Ypow)
         Xdiv = float(10 ** Xpow)
         
@@ -141,19 +139,20 @@ class ChartGenerator:
 
         for i in range(numOfAlgo):
             for j in range(numOfData):
-                y[i][j] = float(y[i][j]) / Ydiv
+                y[i][j] = float(y[i][j]) / 30 / 1000000
                 maxData = max(maxData, y[i][j])
                 minData = min(minData, y[i][j])
 
-        Yend = 10
-        Ystart = 0
-        Yinterval = Yend // 5
+        # Yend = 0
+        # Ystart = 0
+        # Yinterval = 0.6
 
+        ax1.set_xlim(min(x_data), max(x_data))
 
         marker = ['o', 's', 'v', 'x', 'd', 'p']
         linesty = ["-", "--", ":", "-."]
         for i in range(numOfAlgo):
-            ax1.plot(x_data, y[i], color = color[i], lw = 2.5, linestyle = linesty[i], marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5)
+            ax1.plot(x_data, y[i], color = color[i], lw = 2.5, linestyle = linesty[i], marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5, clip_on=False)
         # plt.show()
 
         plt.xticks(fontsize = Xticks_fontsize)
@@ -164,7 +163,7 @@ class ChartGenerator:
         leg = plt.legend(
             AlgoName,
             loc = 10,
-            bbox_to_anchor = (0.40, 0.87),
+            bbox_to_anchor = (0.34, 0.88),
             prop = {"size": fontsize-3, "family": "Times New Roman"},
             frameon = "False",
             labelspacing = 0.2,
@@ -176,19 +175,23 @@ class ChartGenerator:
         )
 
         leg.get_frame().set_linewidth(0.0)
-        Ylabel += self.genMultiName(Ypow)
+        # Ylabel += self.genMultiName(Ypow)
         Xlabel += self.genMultiName(Xpow)
-        plt.subplots_adjust(top = 0.95)
-        plt.subplots_adjust(left = 0.3)
+        plt.subplots_adjust(top = 0.90)
+        plt.subplots_adjust(left = 0.18)
         plt.subplots_adjust(right = 0.95)
-        plt.subplots_adjust(bottom = 0.25)
+        plt.subplots_adjust(bottom = 0.19)
 
-        plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
+        # plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
+        # ax1.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
+        # ax1.yaxis.get_offset_text().set_fontsize(28)
+        ax1.set_yticks([0, 10, 20, 30, 40, 50])
+        
         plt.xticks(x_data, x)
         plt.ylabel(Ylabel, fontsize = Ylabel_fontsize, labelpad = 35)
         plt.xlabel(Xlabel, fontsize = Xlabel_fontsize, labelpad = 10)
-        ax1.yaxis.set_label_coords(-0.3, 0.5)
-        ax1.xaxis.set_label_coords(0.50, -0.2)
+        ax1.yaxis.set_label_coords(-0.15, 0.5)
+        ax1.xaxis.set_label_coords(0.50, -0.17)
         plt.grid(True, linestyle='--', color='0.8') 
 
         pdfName = dataName[0:-4]
@@ -205,10 +208,7 @@ class ChartGenerator:
         if multiple == 0:
             return str()
         else:
-            return "($" + "10" + "^{" + str(multiple) + "}" + "$)"
+            return r"($\mathregular{10^{" + str(multiple) + r"}}$)"
 
 if __name__ == "__main__":
-  
-
-    ChartGenerator("service_time_avg_finished_data_size.ans", "Deadline Avg.", "Throughputs (Mbps)");
-
+    ChartGenerator("deadline_disb_finished_data_size.ans", "# Deadline Distribution", "Throughputs (Mbps)");

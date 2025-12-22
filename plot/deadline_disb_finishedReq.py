@@ -41,7 +41,7 @@ class ChartGenerator:
         ]
         # matplotlib.rcParams['text.usetex'] = True
 
-        fontsize = 32
+        fontsize = 36
         Xlabel_fontsize = fontsize
         Ylabel_fontsize = fontsize
         Xticks_fontsize = fontsize
@@ -64,6 +64,7 @@ class ChartGenerator:
         "axes.titlesize": 20,
         "font.family": "Times New Roman",
         "mathtext.it": "Times New Roman:italic",
+        "mathtext.rm": "Times New Roman",
         # "mathtext.default": "regular",
         "mathtext.fontset": "custom"
         # "mathtext.fontset": "custom"
@@ -73,7 +74,7 @@ class ChartGenerator:
         }
         
         matplotlib.rcParams.update(andy_theme)
-        fig, ax1 = plt.subplots(figsize = (7, 6), dpi = 600)
+        fig, ax1 = plt.subplots(figsize = (8, 6), dpi = 600)
         # ax1.spines['top'].set_linewidth(1.5)
         # ax1.spines['right'].set_linewidth(1.5)
         # ax1.spines['bottom'].set_linewidth(1.5)
@@ -128,31 +129,29 @@ class ChartGenerator:
                     if(float(y[i][j]) <= 10 ** k):
                         Ypow = k-2
 
-
+        Ypow = 3
         Ydiv = float(10 ** Ypow)
         Xdiv = float(10 ** Xpow)
         
         for i in range(numOfData):
             x[i] = float(x[i]) / Xdiv
-            x[i] = int(x[i])
-
-        x = ["30", "150", "300", "450", "600"]
 
         for i in range(numOfAlgo):
             for j in range(numOfData):
-                y[i][j] = float(y[i][j]) / Ydiv
+                y[i][j] = float(y[i][j])
                 maxData = max(maxData, y[i][j])
                 minData = min(minData, y[i][j])
 
-        Yend = 600
-        Ystart = 0
-        Yinterval = 120
+        # Yend = 0
+        # Ystart = 0
+        # Yinterval = 0.6
 
+        ax1.set_xlim(min(x_data), max(x_data))
 
         marker = ['o', 's', 'v', 'x', 'd', 'p']
         linesty = ["-", "--", ":", "-."]
         for i in range(numOfAlgo):
-            ax1.plot(x_data, y[i], color = color[i], lw = 2.5, linestyle = linesty[i], zorder=7-i, marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5)
+            ax1.plot(x_data, y[i], color = color[i], lw = 2.5, linestyle = linesty[i], marker = marker[i], markersize = 15, markerfacecolor = "none", markeredgewidth = 2.5, clip_on=False)
         # plt.show()
 
         plt.xticks(fontsize = Xticks_fontsize)
@@ -163,50 +162,52 @@ class ChartGenerator:
         leg = plt.legend(
             AlgoName,
             loc = 10,
-            bbox_to_anchor = (0.4, 0.87),
+            bbox_to_anchor = (0.34, 0.88),
             prop = {"size": fontsize-3, "family": "Times New Roman"},
             frameon = "False",
             labelspacing = 0.2,
             handletextpad = 0.2,
             handlelength = 1,
-            columnspacing = 0.2,
+            columnspacing = 0.1,
             ncol = 2,
             facecolor = "None",
         )
 
         leg.get_frame().set_linewidth(0.0)
-        Ylabel += self.genMultiName(Ypow)
+        # Ylabel += self.genMultiName(Ypow)
         Xlabel += self.genMultiName(Xpow)
-        plt.subplots_adjust(top = 0.95)
-        plt.subplots_adjust(left = 0.3)
+        plt.subplots_adjust(top = 0.90)
+        plt.subplots_adjust(left = 0.18)
         plt.subplots_adjust(right = 0.95)
-        plt.subplots_adjust(bottom = 0.25)
+        plt.subplots_adjust(bottom = 0.19)
 
-        plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
+        # plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
+        ax1.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
+        ax1.yaxis.get_offset_text().set_fontsize(32)
+        ax1.set_yticks([0, 300, 600, 900, 1200, 1500])
+        
         plt.xticks(x_data, x)
         plt.ylabel(Ylabel, fontsize = Ylabel_fontsize, labelpad = 35)
         plt.xlabel(Xlabel, fontsize = Xlabel_fontsize, labelpad = 10)
-        ax1.yaxis.set_label_coords(-0.3, 0.5)
-        ax1.xaxis.set_label_coords(0.50, -0.2)
-        plt.grid(True, linestyle='--', color='0.8')
-        # plt.show()
-        # plt.tight_layout()
+        ax1.yaxis.set_label_coords(-0.15, 0.5)
+        ax1.xaxis.set_label_coords(0.50, -0.17)
+        plt.grid(True, linestyle='--', color='0.8') 
+
         pdfName = dataName[0:-4]
         # plt.savefig('./pdf/{}.eps'.format(pdfName)) 
         print("save fig in "+directory_path + 'pdf/{}.jpg'.format(pdfName))
         plt.savefig(directory_path + 'pdf/{}.jpg'.format(pdfName)) 
         plt.savefig(directory_path + 'eps/{}.eps'.format(pdfName)) 
-        
+        # Xlabel = Xlabel.replace(' (%)','')
+        # Xlabel = Xlabel.replace('# ','')
+        # Ylabel = Ylabel.replace('# ','')
         plt.close()
 
     def genMultiName(self, multiple):
         if multiple == 0:
             return str()
         else:
-            return "($" + "10" + "^{" + str(multiple) + "}" + "$)"
+            return r"($\mathregular{10^{" + str(multiple) + r"}}$)"
 
 if __name__ == "__main__":
-  
-
-    ChartGenerator("deadline_avg_finishedReq.ans", "Deadline Avg. (s)", "#Completed Requests");
-
+    ChartGenerator("deadline_disb_finishedReq.ans", "Deadline Distribution", "# Served Requests");

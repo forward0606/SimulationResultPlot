@@ -139,7 +139,7 @@ class ChartGenerator:
 
         for i in range(numOfAlgo):
             for j in range(numOfData):
-                y[i][j] = float(y[i][j]) / 30 / 1000000 / 60
+                y[i][j] = float(y[i][j]) / 30 / 1000000
                 maxData = max(maxData, y[i][j])
                 minData = min(minData, y[i][j])
 
@@ -185,7 +185,7 @@ class ChartGenerator:
         # plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
         # ax1.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
         # ax1.yaxis.get_offset_text().set_fontsize(28)
-        ax1.set_yticks([0, 0.3, 0.6, 0.9, 1.2])
+        ax1.set_yticks([0, 20, 40, 60, 80])
         
         plt.xticks(x_data, x)
         plt.ylabel(Ylabel, fontsize = Ylabel_fontsize, labelpad = 35)

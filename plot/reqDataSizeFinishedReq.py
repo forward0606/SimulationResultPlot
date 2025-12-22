@@ -177,7 +177,7 @@ class ChartGenerator:
         # plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
         ax1.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
         ax1.yaxis.get_offset_text().set_fontsize(32)
-        ax1.set_yticks([500, 1000, 1500, 2000, 2500])
+        ax1.set_yticks([0, 500, 1000, 1500, 2000])
         
         plt.xticks(x_data, x)
         plt.ylabel(Ylabel, fontsize = Ylabel_fontsize, labelpad = 35)
