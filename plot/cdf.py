@@ -107,7 +107,8 @@ xlabel=["Buffer Load", "Link Load"]
 for j in range(len(params)):
     files = ["9", "15", "21", "27", "33"]
     for i in range(len(files)):
-        files[i] = "round/10_"+files[i]+"_"+params[j]+"_.ans"
+        # 0_arrival_rate_9_maxLinkLoad_
+        files[i] = "round/0_arrival_rate_"files[i]+"_"+params[j]+"_.ans"
     # 執行繪圖
     plot_cdf_from_files(
         file_list=files,

@@ -36,9 +36,9 @@ class ChartGenerator:
         Xpow = 0
 
         color = [
-            "#FF0000",
             "#800080",
             "#FF8800",
+            "#FF0000",
             "#00FF00",
             "#0000FF",
             "#000000",
@@ -143,7 +143,7 @@ class ChartGenerator:
         plt.xticks(fontsize = Xticks_fontsize)
         plt.yticks(fontsize = Yticks_fontsize)
 
-        AlgoName = ["ours-BD", "ours-AD", "ours-GR", "CCT", "DDC-WP", "DDC-BFS"]
+        AlgoName = ["ours-BD", "ours-AD", "ours", "CCT", "DDC-WP", "DDC-BFS"]
 
         leg = plt.legend(
             AlgoName,
@@ -165,7 +165,7 @@ class ChartGenerator:
         plt.subplots_adjust(top = 0.90)
         plt.subplots_adjust(left = 0.13)
         plt.subplots_adjust(right = 0.98)
-        plt.subplots_adjust(bottom = 0.19)
+        plt.subplots_adjust(bottom = 0.20)
 
         # 科學記號設定
         ax1.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
