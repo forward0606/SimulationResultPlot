@@ -181,7 +181,7 @@ class ChartGenerator:
         plt.subplots_adjust(top = 0.90)
         plt.subplots_adjust(left = 0.18)
         plt.subplots_adjust(right = 0.95)
-        plt.subplots_adjust(bottom = 0.19)
+        plt.subplots_adjust(bottom = 0.20)
 
         # plt.yticks(np.arange(Ystart, Yend + Yinterval, step = Yinterval), fontsize = Yticks_fontsize)
         ax1.ticklabel_format(style='sci', axis='y', scilimits=(0, 0), useMathText=True)
