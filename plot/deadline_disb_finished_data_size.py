@@ -135,7 +135,7 @@ class ChartGenerator:
         
         for i in range(numOfData):
             x[i] = float(x[i]) / Xdiv
-            x[i] = int(x[i])
+            x[i] = x[i]
 
         for i in range(numOfAlgo):
             for j in range(numOfData):
