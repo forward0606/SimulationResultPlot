@@ -213,4 +213,4 @@ class ChartGenerator:
             return r"($\mathregular{10^{" + str(multiple) + r"}}$)"
 
 if __name__ == "__main__":
-    ChartGenerator("num_of_satellite_finishedReq.ans", "# Satellites", "# Served Requests");
+    ChartGenerator("num_of_satellite_finishedReq.ans", "# Satellites", "# served requests");

@@ -214,5 +214,5 @@ class ChartGenerator:
 if __name__ == "__main__":
   
 
-    ChartGenerator("arrival_rate_finishedReq.ans", "Arrival Rate", "# Served Requests");
+    ChartGenerator("arrival_rate_finishedReq.ans", "Request arrival rate", "# served requests");
 

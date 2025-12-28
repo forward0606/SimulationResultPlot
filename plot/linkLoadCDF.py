@@ -1,136 +1,174 @@
-from cmath import log10
 import numpy as np
-import math
-import os
 import matplotlib.pyplot as plt
-import matplotlib.transforms
 import matplotlib
-from matplotlib.offsetbox import AnchoredOffsetbox, TextArea, HPacker, VPacker
+from matplotlib.ticker import FixedLocator, ScalarFormatter
+import os
 
-# 修改資料夾路徑
 directory_path = "../ans_cdf/"
 
-class CDFChartGenerator:
-    def __init__(self, dataName, Xlabel, Ylabel):
-        filename = directory_path + dataName
-        print("start generate", filename)
+# 設定圖形樣式
+matplotlib.rcParams.update({
+    "font.family": "Times New Roman",
+    "xtick.labelsize": 20,
+    "ytick.labelsize": 20,
+    "axes.labelsize": 20,
+    "axes.titlesize": 20,
+    "mathtext.fontset": "custom"
+})
 
-        if not os.path.exists(filename):
-            print(f"file doesn't exist: {filename}")
-            # 產生假資料測試用 (若檔案不存在)
-            # lines = [str(x) + "\n" for x in np.random.exponential(0.5, 1000)]
-            return
+def load_data(filename):
+    print("load: ", directory_path+filename)
+    try:
+        with open(directory_path+filename, 'r') as f:
+            arr =  np.array([float(line.strip()) for line in f if line.strip()])
+            mx = 0
+            if len(arr) > 0:
+                mx = np.max(arr)
+            print("mx = ", mx)
+            return arr
+    except FileNotFoundError:
+        print(f"File {filename} not found.")
+        return np.array([])
 
-        with open(filename, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
+def compute_cdf(data):
+    # 為了讓 0 能在 Log 圖上顯示，我們將 0 視為 "等於起始刻度 (0.0001)"
+    # 這樣 0 的數據點就會貼在最左邊的 Y 軸上，不會消失
+    data = np.maximum(data, 0.001) 
+    
+    data = np.sort(data)
+    cdf = np.arange(1, len(data)+1) / len(data)
+    return data, cdf
 
-        # --- 1. 資料處理 (轉成一維陣列) ---
-        data_points = []
-        for line in lines:
-            line = line.strip()
-            if not line: continue
-            
-            # 處理可能是一行一個數字，或是一行多個空格分開的數字
-            parts = line.split()
-            for p in parts:
-                try:
-                    val = float(p)
-                    data_points.append(val)
-                except ValueError:
-                    continue
+def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg"):
+    colors = ["#FF0000", "#00FF00", "#0000FF", "#000000",  "#900321"]
+    linesty = ["-", "--", ":", "-.", (0, (3, 5, 1, 5))] 
+
+    fig, ax = plt.subplots(figsize=(8, 6), dpi=600)
+    ax.tick_params(direction="in", bottom=True, top=True, left=True, right=True, pad=20)
+    
+    mxDataX = 0
+    x1Cnt = 0
+
+    for i, fname in enumerate(file_list):
+        data = load_data(fname)
+        if len(data) == 0: continue
         
-        if not data_points:
-            print("No valid data found.")
-            return
+        # 計算 CDF
+        x, y = compute_cdf(data)
+        if i == 1:
+            mxDataX = max(mxDataX, max(data))
+            print(x)
+            for j in x:
+                if j > 1:
+                    break;
+                x1Cnt += 1
+            x1Cnt /= len(data)
+            print(x1Cnt)
+        ax.plot(
+            x, y,
+            label=labels[i],
+            color=colors[i],
+            lw=1.5,
+            linestyle=linesty[i],
+            zorder=i+2
+        )
 
-        # --- 2. 計算 CDF ---
-        # 排序數據
-        sorted_data = np.sort(data_points)
-        # 產生對應的 Y 軸 (從 0 到 1)
-        # 方法 A: y = k / n
-        y_vals = np.arange(1, len(sorted_data) + 1) / len(sorted_data)
-        
-        # --- 3. 樣式設定 (沿用模板) ---
-        color = ["#FF0000", "#00FF00", "#0000FF", "#000000"]
-        
-        fontsize = 36
-        Xlabel_fontsize = fontsize
-        Ylabel_fontsize = fontsize
-        Xticks_fontsize = fontsize
-        Yticks_fontsize = fontsize
+    # 標籤與圖例
+    plt.ylabel("CDF", fontsize = 32, labelpad = 35)
+    plt.xlabel(XLabel, fontsize = 32, labelpad = 10)
+    
+    ax.yaxis.set_label_coords(-0.25, 0.5)
+    ax.xaxis.set_label_coords(0.45, -0.27)
 
-        andy_theme = {
-            "xtick.labelsize": 20,
-            "ytick.labelsize": 20,
-            "axes.labelsize": 20,
-            "axes.titlesize": 20,
-            "font.family": "Times New Roman",
-            "mathtext.it": "Times New Roman:italic",
-            "mathtext.rm": "Times New Roman",
-            "mathtext.fontset": "custom"
-        }
+    leg = plt.legend(
+        labels,
+        loc=10,
+        bbox_to_anchor=(0.88, 0.27),
+        prop={"size": 24},
+        frameon=False,
+        ncol=1,
+        columnspacing=0.5,
+        handletextpad=0.2
+    )
 
-        matplotlib.rcParams.update(andy_theme)
-        fig, ax1 = plt.subplots(figsize = (8, 6), dpi = 600)
-        
-        ax1.tick_params(direction = "in")
-        ax1.tick_params(bottom = True, top = True, left = True, right = True)
-        ax1.tick_params(pad = 20)
+    # === 核心修改區塊 ===
+    
+    # 1. 設定為對數座標 (這樣 0.0001->0.001 和 0.1->1 的距離才會一樣)
+    ax.set_xscale("log")
+    
+    if XLabel == "Link Load":
+        # 2. 手動設定您要的 Ticks
+        custom_ticks = [0.001, 0.01, 0.1, 1]
+        if mxDataX > 0:
+            # 確保虛線不會被 log scale 的 0.001 截斷，如果 mxDataX < 0.001 就設為 0.001
+            line_x = max(mxDataX, 0.001) 
+            ax.axvline(x=line_x, color=colors[1], linestyle='-', linewidth=1.5, zorder=0)
+            ax.text(
+                line_x, 1.01,                # x座標(資料), y座標(相對位置, 1.01為頂部上方)
+                f'{mxDataX:.2f}',             # 顯示文字 (取小數點後兩位)
+                transform=ax.get_xaxis_transform(),
+                ha='center',                 # 水平置中
+                va='bottom',                 # 垂直靠底 (文字底部貼齊座標點)
+                fontsize=18,                 # 字體大小
+                color=colors[1],                # 顏色跟線一樣
+                clip_on=False                # 確保文字超出圖表範圍時不會被切掉
+            )
+            ax.axhline(y=x1Cnt, color=colors[1], linestyle='-', linewidth=1.5, zorder=0)
+            ax.text(
+                0.001, 0.88,                # x座標(資料), y座標(相對位置, 1.01為頂部上方)
+                f'{x1Cnt:.2f}',             # 顯示文字 (取小數點後兩位)
+                transform=ax.get_xaxis_transform(),
+                ha='left',                 # 水平置中
+                va='bottom',                 # 垂直靠底 (文字底部貼齊座標點)
+                fontsize=18,                 # 字體大小
+                color=colors[1],                # 顏色跟線一樣
+                clip_on=False                # 確保文字超出圖表範圍時不會被切掉
+            )
+    else:
+        custom_ticks = [0.001, 0.01, 0.1, 1]
 
-        # --- 4. 繪圖 ---
-        # 畫 CDF 線
-        ax1.plot(sorted_data, y_vals, 
-                 color="#0044FF",  # 使用藍色，可自行修改
-                 lw=3.0, 
-                 linestyle="-", 
-                 clip_on=False) # clip_on=False 讓線條貼齊軸時不被切掉
+    ax.set_xticks(custom_ticks)
+    
+    
+    # 4. 設定顯示範圍
+    # left=0.0001 確保圖從 0.0001 開始，所有原本是 0 的數據都會集中在這裡
+    plt.xlim(left=0.001, right=1.6) # right 設為 1.2 是為了給最右邊留點空間
 
-        # --- 5. 軸範圍與刻度設定 ---
-        
-        # X 軸範圍：從 0 到 最大值 (或稍大一點)
-        # 如果你只關心 0~1 的分布，可以用 ax1.set_xlim(0, 1)
-        # max_val = max(sorted_data)
-        # ax1.set_xlim(0, max_val if max_val > 1 else 1.05) 
-        ax1.set_xlim(left=0) # 確保從 0 開始
-        
-        # Y 軸範圍：CDF 固定是 0 到 1
-        ax1.set_ylim(0, 1.05)
-        ax1.set_yticks([0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    # ====================
 
-        plt.xticks(fontsize = Xticks_fontsize)
-        plt.yticks(fontsize = Yticks_fontsize)
+    # Y 軸設定
+    plt.yticks(np.linspace(0, 1, 6), fontsize=32)
+    
+    # X 軸標籤旋轉 (避免擁擠)
+    #plt.xticks(rotation=20) 
+    ax.yaxis.set_label_coords(-0.15, 0.5)
+    ax.xaxis.set_label_coords(0.50, -0.17)
+    
+    # 邊距調整
+    plt.subplots_adjust(top=0.90, left=0.18, right=0.95, bottom=0.20)
+    plt.grid(True, linestyle='--', color='0.8')
 
-        # 調整邊距
-        plt.subplots_adjust(top = 0.90)
-        plt.subplots_adjust(left = 0.18) 
-        plt.subplots_adjust(right = 0.95)
-        plt.subplots_adjust(bottom = 0.18)
+    # 儲存
+    output_dir = directory_path + "pdf/"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    plt.savefig(os.path.join(output_dir, output_filename+".jpg"))
+    plt.savefig(os.path.join(output_dir, output_filename+".eps"))
+    plt.close()
+    print(f"Saved plot as {output_filename}")
 
-        # 格線
-        plt.grid(True, linestyle='--', color='0.8')
-
-        # Label 設定
-        plt.ylabel(Ylabel, fontsize = Ylabel_fontsize, labelpad = 35)
-        plt.xlabel(Xlabel, fontsize = Xlabel_fontsize, labelpad = 10)
-        
-        # 手動調整 Label 位置 (可選)
-        # ax1.yaxis.set_label_coords(-0.15, 0.5)
-        # ax1.xaxis.set_label_coords(0.50, -0.15)
-
-        # --- 6. 存檔 ---
-        pdfName = dataName.replace('.ans', '_cdf') # 檔名加上 _cdf
-        
-        # 建立資料夾
-        if not os.path.exists(directory_path + 'pdf/'):
-            os.makedirs(directory_path + 'pdf/')
-        if not os.path.exists(directory_path + 'eps/'):
-            os.makedirs(directory_path + 'eps/')
-
-        print("save fig in "+directory_path + 'pdf/{}.jpg'.format(pdfName))
-        plt.savefig(directory_path + 'pdf/{}.jpg'.format(pdfName))
-        plt.savefig(directory_path + 'eps/{}.eps'.format(pdfName))
-        plt.close()
-
-if __name__ == "__main__":
-    # 這裡輸入檔名，路徑已在 directory_path 設定為 ../ans_cdf/
-    CDFChartGenerator("15_maxBufLoad_.ans", "Link Load", "CDF")
+# --- 執行區塊 ---
+params=["maxBufLoad", "maxLinkLoad", "LPLinkLoad", "LPBufLoad"]
+xlabel=["Buffer Load", "Link Load", "LP Link Load", "LP Buffer Load"];
+for j in range(len(params)):
+    files = ["9", "15", "21", "27", "33"]
+    for i in range(len(files)):
+        # 9_arrival_rate_15_maxLinkLoad_.ans
+        files[i] = "arrival_rate_"+files[i]+"_"+params[j]+"_.ans"
+    
+    plot_cdf_from_files(
+        file_list=files,
+        labels=["0.3", "0.5", "0.7", "0.9", "1.1"],
+        XLabel=xlabel[j],
+        output_filename=params[j]+"_cdf_log_fixed"
+    )

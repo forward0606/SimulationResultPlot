@@ -203,4 +203,4 @@ class ChartGenerator:
             return r"($\mathregular{10^{" + str(multiple) + r"}}$)"
 
 if __name__ == "__main__":
-    ChartGenerator("request_data_size_avg_finished_data_size.ans", "Avg. Request Data Size", "Throughputs (Mbps)");
+    ChartGenerator("request_data_size_avg_finished_data_size.ans", "Mean request data size", "Throughputs (Mbps)");

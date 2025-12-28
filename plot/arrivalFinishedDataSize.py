@@ -212,4 +212,4 @@ class ChartGenerator:
 
 if __name__ == "__main__":
 
-    ChartGenerator("arrival_rate_finishedDataSize.ans", "Arrival Rate", "Throughputs (Mbps)");
+    ChartGenerator("arrival_rate_finishedDataSize.ans", "Request arrival rate", "Throughputs (Mbps)");

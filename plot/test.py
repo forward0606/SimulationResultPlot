@@ -4,7 +4,7 @@ import matplotlib
 from matplotlib.ticker import FixedLocator, ScalarFormatter
 import os
 
-directory_path = "../ans_cdf/"
+directory_path = "../ans_cdf2/"
 
 # 設定圖形樣式
 matplotlib.rcParams.update({
@@ -34,7 +34,7 @@ def compute_cdf(data):
     # 為了讓 0 能在 Log 圖上顯示，我們將 0 視為 "等於起始刻度 (0.0001)"
     # 這樣 0 的數據點就會貼在最左邊的 Y 軸上，不會消失
     data = np.maximum(data, 0.001) 
-    
+    data = [x for x in data if x <= 1]  
     data = np.sort(data)
     cdf = np.arange(1, len(data)+1) / len(data)
     return data, cdf
@@ -83,10 +83,10 @@ def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg
     # === 核心修改區塊 ===
     
     # 1. 設定為對數座標 (這樣 0.0001->0.001 和 0.1->1 的距離才會一樣)
-    ax.set_xscale("log")
+    #ax.set_xscale("log")
     
     # 2. 手動設定您要的 Ticks
-    custom_ticks = [0.001, 0.01, 0.1, 1]
+    custom_ticks = [0.2, 0.4, 0.6, 0.8, 1.0]
     ax.set_xticks(custom_ticks)
     
     # 3. 強制設定標籤文字 (不使用科學記號 10^-4)
@@ -120,17 +120,17 @@ def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg
     print(f"Saved plot as {output_filename}")
 
 # --- 執行區塊 ---
-params=["maxBufLoad", "maxLinkLoad", "LPLinkLoad", "LPBufLoad"]
-xlabel=["Buffer Load", "Link Load", "LP Link Load", "LP Buffer Load"];
+params=["0", "10", "20"]
+xlabel=["Deadline 0 Seconds", "Deadline 300 Seconds", "Deadline 600 Seconds"];
 for j in range(len(params)):
-    files = ["9", "15", "21", "27", "33"]
+    files = ["AppAlgo", "CCTAlgo", "DDC+WP+DA", "DDC+BFS+DA"]
     for i in range(len(files)):
-        # 9_arrival_rate_15_maxLinkLoad_.ans
-        files[i] = "arrival_rate_"+files[i]+"_"+params[j]+"_.ans"
+        # AppAlgo_0_deadline.ans
+        files[i] = files[i]+"_"+params[j]+"_deadline.ans"
     
     plot_cdf_from_files(
         file_list=files,
-        labels=["0.3", "0.5", "0.7", "0.9", "1.1"],
+        labels=["ours", "CCT", "DDC-WP", "DDC-BFS"],
         XLabel=xlabel[j],
         output_filename=params[j]+"_cdf_log_fixed"
     )
