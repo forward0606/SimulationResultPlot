@@ -9,8 +9,8 @@ directory_path = "../ans_cdf/"
 # 設定圖形樣式
 matplotlib.rcParams.update({
     "font.family": "Times New Roman",
-    "xtick.labelsize": 20,
-    "ytick.labelsize": 20,
+    "xtick.labelsize": 32,
+    "ytick.labelsize": 32,
     "axes.labelsize": 20,
     "axes.titlesize": 20,
     "mathtext.fontset": "custom"
@@ -43,7 +43,7 @@ def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg
     colors = ["#FF0000", "#00FF00", "#0000FF", "#000000",  "#900321"]
     linesty = ["-", "--", ":", "-.", (0, (3, 5, 1, 5))] 
 
-    fig, ax = plt.subplots(figsize=(8, 6), dpi=600)
+    fig, ax = plt.subplots(figsize=(7, 6), dpi=600)
     ax.tick_params(direction="in", bottom=True, top=True, left=True, right=True, pad=20)
     
     mxDataX = 0
@@ -68,13 +68,13 @@ def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg
             x, y,
             label=labels[i],
             color=colors[i],
-            lw=1.5,
+            lw=2,
             linestyle=linesty[i],
             zorder=i+2
         )
 
     # 標籤與圖例
-    plt.ylabel("CDF", fontsize = 32, labelpad = 35)
+    plt.ylabel("CDFs", fontsize = 32, labelpad = 35)
     plt.xlabel(XLabel, fontsize = 32, labelpad = 10)
     
     ax.yaxis.set_label_coords(-0.25, 0.5)
@@ -83,7 +83,7 @@ def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg
     leg = plt.legend(
         labels,
         loc=10,
-        bbox_to_anchor=(0.88, 0.27),
+        bbox_to_anchor=(0.86, 0.27),
         prop={"size": 24},
         frameon=False,
         ncol=1,
@@ -96,32 +96,32 @@ def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg
     # 1. 設定為對數座標 (這樣 0.0001->0.001 和 0.1->1 的距離才會一樣)
     ax.set_xscale("log")
     
-    if XLabel == "Link Load":
+    if XLabel == "Link load after rounding":
         # 2. 手動設定您要的 Ticks
         custom_ticks = [0.001, 0.01, 0.1, 1]
         if mxDataX > 0:
             # 確保虛線不會被 log scale 的 0.001 截斷，如果 mxDataX < 0.001 就設為 0.001
             line_x = max(mxDataX, 0.001) 
-            ax.axvline(x=line_x, color=colors[1], linestyle='-', linewidth=1.5, zorder=0)
+            ax.axvline(x=line_x, color=colors[3], linestyle='--', linewidth=1.5, zorder=0)
             ax.text(
                 line_x, 1.01,                # x座標(資料), y座標(相對位置, 1.01為頂部上方)
                 f'{mxDataX:.2f}',             # 顯示文字 (取小數點後兩位)
                 transform=ax.get_xaxis_transform(),
                 ha='center',                 # 水平置中
                 va='bottom',                 # 垂直靠底 (文字底部貼齊座標點)
-                fontsize=18,                 # 字體大小
-                color=colors[1],                # 顏色跟線一樣
+                fontsize=28,                 # 字體大小
+                color=colors[3],                # 顏色跟線一樣
                 clip_on=False                # 確保文字超出圖表範圍時不會被切掉
             )
-            ax.axhline(y=x1Cnt, color=colors[1], linestyle='-', linewidth=1.5, zorder=0)
+            ax.axhline(y=x1Cnt, color=colors[3], linestyle='--', linewidth=1.5, zorder=0)
             ax.text(
-                0.001, 0.88,                # x座標(資料), y座標(相對位置, 1.01為頂部上方)
+                0.001, 0.82,                # x座標(資料), y座標(相對位置, 1.01為頂部上方)
                 f'{x1Cnt:.2f}',             # 顯示文字 (取小數點後兩位)
                 transform=ax.get_xaxis_transform(),
                 ha='left',                 # 水平置中
                 va='bottom',                 # 垂直靠底 (文字底部貼齊座標點)
-                fontsize=18,                 # 字體大小
-                color=colors[1],                # 顏色跟線一樣
+                fontsize=28,                 # 字體大小
+                color=colors[3],                # 顏色跟線一樣
                 clip_on=False                # 確保文字超出圖表範圍時不會被切掉
             )
     else:
@@ -141,11 +141,12 @@ def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg
     
     # X 軸標籤旋轉 (避免擁擠)
     #plt.xticks(rotation=20) 
-    ax.yaxis.set_label_coords(-0.15, 0.5)
+    plt.xticks(fontsize=32) 
+    ax.yaxis.set_label_coords(-0.17, 0.5)
     ax.xaxis.set_label_coords(0.50, -0.17)
     
     # 邊距調整
-    plt.subplots_adjust(top=0.90, left=0.18, right=0.95, bottom=0.20)
+    plt.subplots_adjust(top=0.90, left=0.20, right=0.95, bottom=0.20)
     plt.grid(True, linestyle='--', color='0.8')
 
     # 儲存
@@ -159,7 +160,7 @@ def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg
 
 # --- 執行區塊 ---
 params=["maxBufLoad", "maxLinkLoad", "LPLinkLoad", "LPBufLoad"]
-xlabel=["Buffer Load", "Link Load", "LP Link Load", "LP Buffer Load"];
+xlabel=["Buffer Load", "Link load after rounding", "Link load of OPT(P2)", "LP Buffer Load"];
 for j in range(len(params)):
     files = ["9", "15", "21", "27", "33"]
     for i in range(len(files)):

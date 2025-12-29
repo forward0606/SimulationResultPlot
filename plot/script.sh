@@ -1,0 +1,15 @@
+python3 arrivalFinishedDataSize.py
+python3 arrivalFinishedReq.py
+python3 arrivalFinishedReqBar.py
+python3 deadline_disb_finished_data_size.py
+python3 deadline_disb_finishedReq.py
+python3 deadlineBar.py
+python3 SDpairFinishedReq.py
+python3 SDpairFinishedDataSize.py
+python3 linkLoadCDF.py
+python3 reqDataSizeFinishedDataSize.py
+python3 reqDataSizeFinishedReq.py
+python3 satelliteFinishedDataSize.py
+python3 satelliteFinishedReq.py
+python3 serviceTimeFinishedDataSize.py
+python3 serviceTimeFinishedReq.py

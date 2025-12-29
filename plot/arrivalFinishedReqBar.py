@@ -143,12 +143,12 @@ class ChartGenerator:
         plt.xticks(fontsize = Xticks_fontsize)
         plt.yticks(fontsize = Yticks_fontsize)
 
-        AlgoName = ["ours-BD", "ours-AD", "ours", "CCT", "DDC-WP", "DDC-BFS"]
+        AlgoName = ["ours-round", "ours-removal", "ours-reinsert", "CCT", "DDC-WP", "DDC-BFS"]
 
         leg = plt.legend(
             AlgoName,
             loc = 10,
-            bbox_to_anchor = (0.24, 0.82),
+            bbox_to_anchor = (0.283, 0.82),
             prop = {"size": fontsize-3, "family": "Times New Roman"},
             frameon = False, # 修正字串 "False" 為布林值 False 較佳，但 "False" 在某些版本也可行
             labelspacing = 0.2,

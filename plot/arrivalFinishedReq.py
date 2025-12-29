@@ -74,7 +74,7 @@ class ChartGenerator:
         }
         
         matplotlib.rcParams.update(andy_theme)
-        fig, ax1 = plt.subplots(figsize = (8, 6), dpi = 600)
+        fig, ax1 = plt.subplots(figsize = (7, 6), dpi = 600)
         # ax1.spines['top'].set_linewidth(1.5)
         # ax1.spines['right'].set_linewidth(1.5)
         # ax1.spines['bottom'].set_linewidth(1.5)
@@ -164,7 +164,7 @@ class ChartGenerator:
         leg = plt.legend(
             AlgoName,
             loc = 10,
-            bbox_to_anchor = (0.34, 0.88),
+            bbox_to_anchor = (0.39, 0.88),
             prop = {"size": fontsize-3, "family": "Times New Roman"},
             frameon = "False",
             labelspacing = 0.2,
@@ -179,7 +179,7 @@ class ChartGenerator:
         # Ylabel += self.genMultiName(Ypow)
         Xlabel += self.genMultiName(Xpow)
         plt.subplots_adjust(top = 0.90)
-        plt.subplots_adjust(left = 0.18)
+        plt.subplots_adjust(left = 0.20)
         plt.subplots_adjust(right = 0.95)
         plt.subplots_adjust(bottom = 0.20)
 
@@ -191,7 +191,7 @@ class ChartGenerator:
         plt.xticks(x_data, x)
         plt.ylabel(Ylabel, fontsize = Ylabel_fontsize, labelpad = 35)
         plt.xlabel(Xlabel, fontsize = Xlabel_fontsize, labelpad = 10)
-        ax1.yaxis.set_label_coords(-0.15, 0.5)
+        ax1.yaxis.set_label_coords(-0.17, 0.5)
         ax1.xaxis.set_label_coords(0.50, -0.17)
         plt.grid(True, linestyle='--', color='0.8') 
 
