@@ -41,7 +41,7 @@ class ChartGenerator:
         ]
         # matplotlib.rcParams['text.usetex'] = True
 
-        fontsize = 36
+        fontsize = 28
         Xlabel_fontsize = fontsize
         Ylabel_fontsize = fontsize
         Xticks_fontsize = fontsize
@@ -164,8 +164,8 @@ class ChartGenerator:
         leg = plt.legend(
             AlgoName,
             loc = 10,
-            bbox_to_anchor = (0.39, 0.88),
-            prop = {"size": fontsize-3, "family": "Times New Roman"},
+            bbox_to_anchor = (0.36, 0.88),
+            prop = {"size": fontsize, "family": "Times New Roman"},
             frameon = "False",
             labelspacing = 0.2,
             handletextpad = 0.2,

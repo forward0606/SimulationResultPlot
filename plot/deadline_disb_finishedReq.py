@@ -41,7 +41,7 @@ class ChartGenerator:
         ]
         # matplotlib.rcParams['text.usetex'] = True
 
-        fontsize = 36
+        fontsize = 28
         Xlabel_fontsize = fontsize
         Ylabel_fontsize = fontsize
         Xticks_fontsize = fontsize
@@ -162,8 +162,8 @@ class ChartGenerator:
         leg = plt.legend(
             AlgoName,
             loc = 10,
-            bbox_to_anchor = (0.39, 0.88),
-            prop = {"size": fontsize-3, "family": "Times New Roman"},
+            bbox_to_anchor = (0.36, 0.88),
+            prop = {"size": fontsize, "family": "Times New Roman"},
             frameon = "False",
             labelspacing = 0.2,
             handletextpad = 0.2,
@@ -197,7 +197,8 @@ class ChartGenerator:
         # plt.savefig('./pdf/{}.eps'.format(pdfName)) 
         print("save fig in "+directory_path + 'pdf/{}.pdf'.format(pdfName))
         plt.savefig(directory_path + 'pdf/{}.pdf'.format(pdfName)) 
-        plt.savefig(directory_path + 'eps/{}.eps'.format(pdfName)) 
+        plt.savefig(directory_path + 'eps/{}.eps'.format(pdfName))
+        plt.savefig(directory_path + 'svg/{}.svg'.format(pdfName))  
         # Xlabel = Xlabel.replace(' (%)','')
         # Xlabel = Xlabel.replace('# ','')
         # Ylabel = Ylabel.replace('# ','')
