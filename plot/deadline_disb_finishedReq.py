@@ -195,8 +195,8 @@ class ChartGenerator:
 
         pdfName = dataName[0:-4]
         # plt.savefig('./pdf/{}.eps'.format(pdfName)) 
-        print("save fig in "+directory_path + 'pdf/{}.jpg'.format(pdfName))
-        plt.savefig(directory_path + 'pdf/{}.jpg'.format(pdfName)) 
+        print("save fig in "+directory_path + 'pdf/{}.pdf'.format(pdfName))
+        plt.savefig(directory_path + 'pdf/{}.pdf'.format(pdfName)) 
         plt.savefig(directory_path + 'eps/{}.eps'.format(pdfName)) 
         # Xlabel = Xlabel.replace(' (%)','')
         # Xlabel = Xlabel.replace('# ','')

@@ -183,15 +183,18 @@ class ChartGenerator:
         plt.grid(True, linestyle='--', color='0.8')
 
         pdfName = dataName[0:-4]
-        print("save fig in "+directory_path + 'pdf/{}.jpg'.format(pdfName))
+        print("save fig in "+directory_path + 'pdf/{}.pdf'.format(pdfName))
         # 確保目錄存在
         if not os.path.exists(directory_path + 'pdf/'):
             os.makedirs(directory_path + 'pdf/')
         if not os.path.exists(directory_path + 'eps/'):
             os.makedirs(directory_path + 'eps/')
+        if not os.path.exists(directory_path + 'svg/'):
+            os.makedirs(directory_path + 'svg/')
             
-        plt.savefig(directory_path + 'pdf/{}.jpg'.format(pdfName))
+        plt.savefig(directory_path + 'pdf/{}.pdf'.format(pdfName))
         plt.savefig(directory_path + 'eps/{}.eps'.format(pdfName))
+        plt.savefig(directory_path + 'svg/{}.svg'.format(pdfName)) 
         plt.close()
 
     def genMultiName(self, multiple):

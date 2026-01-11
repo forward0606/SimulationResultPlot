@@ -114,10 +114,10 @@ if len(data) > 0:
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
     output_filename = "5_15_LinkLoad_LogHist"
-    plt.savefig(os.path.join(output_dir, output_filename + ".jpg"))
+    plt.savefig(os.path.join(output_dir, output_filename + ".pdf"))
     # plt.savefig(os.path.join(output_dir, output_filename + ".eps"))
     plt.show()
-    print(f"Saved plot to {output_dir}{output_filename}.jpg")
+    print(f"Saved plot to {output_dir}{output_filename}.pdf")
 
 else:
     print("No data found.")

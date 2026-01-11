@@ -172,9 +172,10 @@ class ChartGenerator:
         if not os.path.exists(directory_path + 'eps/'):
             os.makedirs(directory_path + 'eps/')
 
-        print("  save fig in " + directory_path + 'pdf/{}.jpg'.format(outputName))
-        plt.savefig(directory_path + 'pdf/{}.jpg'.format(outputName))
+        print("  save fig in " + directory_path + 'pdf/{}.pdf'.format(outputName))
+        plt.savefig(directory_path + 'pdf/{}.pdf'.format(outputName))
         plt.savefig(directory_path + 'eps/{}.eps'.format(outputName))
+        plt.savefig(directory_path + 'svg/{}.svg'.format(outputName))
         plt.close()
 
 if __name__ == "__main__":

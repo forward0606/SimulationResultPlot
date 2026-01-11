@@ -39,7 +39,7 @@ def compute_cdf(data):
     cdf = np.arange(1, len(data)+1) / len(data)
     return data, cdf
 
-def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg"):
+def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.pdf"):
     colors = ["#FF0000", "#00FF00", "#0000FF", "#000000",  "#900321"]
     linesty = ["-", "--", ":", "-.", (0, (3, 5, 1, 5))] 
 
@@ -114,7 +114,7 @@ def plot_cdf_from_files(file_list, labels, XLabel, output_filename="cdf_plot.jpg
     output_dir = directory_path + "pdf/"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-    plt.savefig(os.path.join(output_dir, output_filename+".jpg"))
+    plt.savefig(os.path.join(output_dir, output_filename+".pdf"))
     plt.savefig(os.path.join(output_dir, output_filename+".eps"))
     plt.close()
     print(f"Saved plot as {output_filename}")
