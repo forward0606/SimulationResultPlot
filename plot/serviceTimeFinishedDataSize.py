@@ -212,4 +212,4 @@ class ChartGenerator:
             return r"($\mathregular{10^{" + str(multiple) + r"}}$)"
 
 if __name__ == "__main__":
-    ChartGenerator("service_time_avg_finished_data_size.ans", "Deadline Avg. (s)",  "Throughputs (Mbps)");
+    ChartGenerator("service_time_avg_finished_data_size.ans", "Mean timeout (s)",  "Throughputs (Mbps)");
